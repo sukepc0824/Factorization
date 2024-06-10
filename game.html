@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <title>Factorization</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        main {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            max-height: 500px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        dialog {
+            position: fixed;
+            border-radius: 10px;
+            border: #ddd;
+            background-color: #f2f2f2;
+            text-align: center;
+            padding: 12px;
+            width: 340px;
+            font-family: "Inter", sans-serif;
+        }
+
+        dialog.gameover h2 {
+            font-size: 32px;
+            margin: 24px;
+        }
+
+        dialog.gameover .score-wrap {
+            margin: 32px;
+        }
+
+        dialog p {
+            margin: 0;
+        }
+
+        dialog.gameover .score {
+            font-size: 70px;
+            font-family: "DM Mono", sans-serif !important;
+        }
+
+        dialog.gameover .high-score {
+            font-size: 32px;
+        }
+
+        dialog.gameover button.play {
+            border: none;
+            width: 100%;
+            font-size: 20px;
+            padding: 6px;
+            border-radius: 5px;
+            margin-top: 10px;
+            background-color: #444;
+            color: white;
+        }
+
+        dialog.gameover button.ranking {
+            border: none;
+            width: 100%;
+            font-size: 20px;
+            padding: 6px;
+            border-radius: 5px;
+            margin-top: 10px;
+            color: #222;
+            background-color: #eee;
+            text-decoration: none;
+            border: 1px solid #ccc;
+        }
+
+        header {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            height: 36px;
+            top: 15px;
+            align-items: center;
+            justify-content: center;
+            gap: 0px;
+            width: 100%;
+            max-width: 540px;
+        }
+
+        header .status {
+            width: 50%;
+            padding: 0 20px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 4px;
+            border-radius: 400px;
+        }
+
+        header progress {
+            width: 100%;
+            accent-color: #222;
+        }
+
+        header .status-score {
+            width: 56px;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 33px;
+            font-weight: 500;
+            border-radius: 400px;
+            color: #ef7000;
+        }
+
+        header .time {
+            width: 40px;
+            text-align: center;
+            font-size: 26px;
+        }
+
+        .output {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        h1 {
+            text-align: center;
+            font-weight: 500;
+            font-size: 80px;
+            margin: 0;
+            animation: animationZoom 26s linear forwards;
+        }
+
+        @keyframes animationZoom {
+            100% {
+                transform: scale(2);
+            }
+        }
+
+        .container {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
+            width: 100%;
+        }
+
+        .container button {
+            background-color: white;
+            border: #ddd solid 1px;
+            width: 82px;
+            padding: 17px;
+            font-size: 32px;
+            font-family: "DM Mono", sans-serif;
+            border-radius: 10px;
+            color: #222;
+        }
+
+        button {
+            outline: none;
+            font-family: "Inter", sans-serif;
+        }
+
+        button:hover {
+            filter: brightness(94%);
+        }
+
+        button:active {
+            filter: brightness(90%);
+        }
+
+        @media (max-width: 600px) {
+            main {
+                max-height: calc(100%);
+            }
+
+            h1 {
+                font-size: 54px;
+            }
+
+            button:hover {
+                filter: brightness(100%);
+            }
+
+            button:active {
+                filter: brightness(90%);
+            }
+
+            .output {
+                top: 45%;
+            }
+
+            .container {
+                width: calc(100% - 30px);
+                gap: 2px;
+                bottom: 50px;
+            }
+
+            .container button {
+                width: 49%;
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <dialog class="ranking" style="z-index: 20000;overflow-y: scroll; height: 500px;">
+        <table class="ranking-modal">
+            <!--append-->
+            <form method="dialog">
+                <button style="
+                font-size: 18px;
+                color: white;
+                background-color: #555;">× Close</button>
+            </form>
+        </table>
+    </dialog>
+    <dialog class="gameover">
+        <div class="score-wrap">
+            <p>score:</p>
+            <p class="score">0</p>
+        </div>
+        <form method="dialog">
+            <button onclick="gamestart()" class="play" autofocus>▶️ Play Again</button>
+        </form>
+        <button onclick="window.open('./ranking.html')" class="ranking">Open Ranking</button>
+    </dialog>
+    <main>
+        <header>
+            <div class="status">
+                <p> <!--append--></p>
+                <progress value="0" max="30"></progress>
+            </div>
+            <div class="status-score">
+                0
+            </div>
+        </header>
+        <div class="output">
+            <h1> <!--append--></h1>
+        </div>
+        <div class="container">
+            <!--append-->
+        </div>
+    </main>
+
+
+    <script>
+        function keyup_event(e) {
+            document.querySelector("[value='" + primes[keybind.indexOf(e.key)] + "']").style.filter = "brightness(100%)"
+        }
+
+        function keydown_event(e) {
+            devide(primes[keybind.indexOf(e.key)])
+            document.querySelector("[value='" + primes[keybind.indexOf(e.key)] + "']").style.filter = "brightness(90%)"
+        }
+
+        function gamestart() {
+            primes = [2, 3, 5, 7, 11, 13]
+            keybind = ["d", "f", "g", "h", "j", "k"]
+            prime_list = [2, 3, 5, 7]
+            prime_number = 1
+            difficulty = 3
+            score = 0
+
+            document.querySelector(".status-score").innerText = score
+            create_buttons()
+            generate_product()
+
+            document.addEventListener('keyup', keyup_event)
+            document.addEventListener('keydown', keydown_event)
+        }
+
+        function set_timer() {
+            countDownSeconds = 30
+            document.querySelector("progress").value = countDownSeconds
+            countdown = setInterval(function () {
+                countDownSeconds--
+                document.querySelector("progress").value = countDownSeconds
+
+                if (countDownSeconds === 0) {
+                    clearInterval(countdown)
+                    gameover()
+                }
+            }, 1000);
+        }
+
+        function gameover() {
+            document.querySelector("dialog.gameover").showModal()
+            document.querySelector(".score").innerText = score
+            document.removeEventListener("keyup", keyup_event)
+            document.removeEventListener("keydown", keydown_event)
+            if (prime_number != 1) {
+                clearInterval(countdown)
+            }
+            submit_userdata()
+        }
+
+        function getRandomInt(max) {
+            return Math.floor(Math.random() * max)
+        }
+
+        function generate_product() {
+            set_timer()
+            for (let i = 0; i < difficulty ** 2 / 6; i++) {
+                prime_number *= prime_list[Math.floor(Math.random() * (prime_list.length - 1) + 1)] * (Math.round(getRandomInt(difficulty) + 1))
+            }
+            document.querySelector("h1").remove()
+
+            let element_button = document.createElement("h1")
+            element_button.innerText = prime_number
+            document.querySelector(".output").append(element_button)
+        }
+
+        function create_buttons() {
+            document.querySelector(".container").innerHTML = ''
+            prime_list.forEach((value, index) => {
+                let element_button = document.createElement("button")
+                element_button.innerText = value
+                element_button.setAttribute("onclick", `devide(${value})`)
+                element_button.value = value
+                document.querySelector(".container").append(element_button)
+            })
+        }
+
+        function devide(number) {
+            if (prime_number % number == 0) {
+                prime_number /= number
+                score += number
+                document.querySelector(".status-score").innerText = score
+
+                document.querySelector("h1").innerText = prime_number
+
+                if (prime_number === 1) {
+                    difficulty += 0.25
+                    if (Number.isInteger(difficulty)) {
+                        document.querySelector("h1").innerText = "!"
+                        if (primes[difficulty] != undefined) {
+                            prime_list.push(primes[difficulty])
+                            create_buttons()
+                        }
+                    } else {
+                        document.querySelector("h1").innerText = "1"
+                    }
+
+                    clearInterval(countdown)
+
+                    window.setTimeout(generate_product, 340);
+                }
+            } else {
+                gameover()
+            }
+        }
+
+        function submit_userdata() {
+            if (score === 0) {
+                return false
+            }
+            if (localStorage.hasOwnProperty("name") && localStorage.getItem("name").length) {
+                axios({
+                    method: "POST",
+                    url: "https://api.baserow.io/api/database/rows/table/308594/?user_field_names=true",
+                    headers: {
+                        Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01",
+                        "Content-Type": "application/json"
+                    },
+                    data: {
+                        "user_name": localStorage.getItem("name"),
+                        "score": score
+                    }
+                })
+            }
+        }
+        gamestart()
+    </script>
+</body>
+
+</html>

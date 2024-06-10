@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factorization - Ranking</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        body {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        main {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        table {
+            border-collapse: collapse;
+            max-width: 500px;
+            width: 100%;
+            padding: 5px;
+            margin: 0;
+            font-size: 18px;
+        }
+
+        table td {
+            padding: 14px;
+            border-top: 1px solid #ccc;
+            border-bottom: 1px solid #ccc;
+            text-align: left;
+        }
+
+        td.user-name {
+            font-family: "Inter", sans-serif;
+        }
+
+        td.user-score {
+            text-align: right;
+        }
+    </style>
+</head>
+
+<body>
+    <main>
+        <h1>
+            Ranking - top 100
+        </h1>
+        <table class="ranking-table">
+        </table>
+    </main>
+    <script>
+        axios({
+            method: "GET",
+            url: "https://api.baserow.io/api/database/rows/table/308594/?user_field_names=true&order_by=-score&size=100",
+            headers: {
+                Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01"
+            },
+        }).then(function (response) {
+            response.data.results.forEach((value, index) => {
+                document.querySelector(".ranking-table").innerHTML += `
+                <tr>
+                    <td class="user-rank">${index + 1}</td>
+                    <td class="user-name">${value.user_name}</td>
+                    <td class="user-score">${value.score}</td>
+                </tr>`
+            })
+        })
+    </script>
+</body>
+
+</html>
