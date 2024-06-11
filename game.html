@@ -356,7 +356,7 @@
         function devide(number) {
             if (prime_number % number == 0) {
                 prime_number /= number
-                score += Math.floor(number * difficulty / 3)
+                score += Math.floor(number * difficulty / 3 - 1)
                 document.querySelector(".status-score").innerText = score
 
                 document.querySelector("h1").innerText = prime_number
