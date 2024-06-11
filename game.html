@@ -390,6 +390,9 @@
                         }
                     })
                 }).then(function (response) {
+                    if (score > value.score) {
+                        return false
+                    }
                     axios({
                         method: "POST",
                         url: "https://api.baserow.io/api/database/rows/table/308594/?user_field_names=true",
