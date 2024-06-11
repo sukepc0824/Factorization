@@ -35,7 +35,7 @@
         }
 
         dialog.gameover .score-wrap {
-            margin: 32px;
+            margin: 22px;
         }
 
         dialog p {
@@ -48,7 +48,8 @@
         }
 
         dialog.gameover .high-score {
-            font-size: 32px;
+            font-size: 36px;
+            font-family: "DM Mono", sans-serif !important;
         }
 
         dialog.gameover button.play {
@@ -235,6 +236,10 @@
             <p>score:</p>
             <p class="score">0</p>
         </div>
+        <div class="score-wrap">
+            <p>High Score:</p>
+            <p class="high-score">0</p>
+        </div>
         <form method="dialog">
             <button onclick="gamestart()" class="play" autofocus>▶️ Play Again</button>
         </form>
@@ -285,16 +290,14 @@
                     },
                 }).then(function (response) {
                     max_score = Math.max(...response.data.results.map(obj => obj.score))
-                    console.log(max_score)
                 })
-
-                document.querySelector(".status-score").innerText = score
-                create_buttons()
-                generate_product()
-
-                document.addEventListener('keyup', keyup_event)
-                document.addEventListener('keydown', keydown_event)
             }
+            document.querySelector(".status-score").innerText = score
+            create_buttons()
+            generate_product()
+
+            document.addEventListener('keyup', keyup_event)
+            document.addEventListener('keydown', keydown_event)
         }
 
         function set_timer() {
@@ -320,6 +323,7 @@
                 clearInterval(countdown)
             }
             submit_userdata()
+            document.querySelector(".high-score").innerText = max_score
         }
 
         function getRandomInt(max) {
@@ -352,7 +356,7 @@
         function devide(number) {
             if (prime_number % number == 0) {
                 prime_number /= number
-                score += number
+                score += Math.floor(number * difficulty / 3)
                 document.querySelector(".status-score").innerText = score
 
                 document.querySelector("h1").innerText = prime_number
@@ -379,7 +383,7 @@
         }
 
         function submit_userdata() {
-            if (score === 0 || localStorage.getItem("name").length) {
+            if (score === 0 || localStorage.getItem("name").length === 0) {
                 return false
             }
 
@@ -414,19 +418,6 @@
                                 "score": score
                             }
                         })
-                    })
-                } else {
-                    axios({
-                        method: "POST",
-                        url: "https://api.baserow.io/api/database/rows/table/308594/?user_field_names=true",
-                        headers: {
-                            Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01",
-                            "Content-Type": "application/json"
-                        },
-                        data: {
-                            "user_name": localStorage.getItem("name"),
-                            "score": score
-                        }
                     })
                 }
             }
