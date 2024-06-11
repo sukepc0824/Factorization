@@ -372,17 +372,37 @@
             }
             if (localStorage.hasOwnProperty("name") && localStorage.getItem("name").length) {
                 axios({
-                    method: "POST",
-                    url: "https://api.baserow.io/api/database/rows/table/308594/?user_field_names=true",
+                    method: "GET",
+                    url: "https://api.baserow.io/api/database/rows/table/308594/?search=" + localStorage.getItem("name"),
                     headers: {
-                        Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01",
-                        "Content-Type": "application/json"
+                        Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01"
                     },
-                    data: {
-                        "user_name": localStorage.getItem("name"),
-                        "score": score
-                    }
-                })
+                }.then(function (response) {
+                    response.data.results.forEach((value, index) => {
+                        if (score < value.score) {
+                            axios({
+                                method: "DELETE",
+                                url: "https://api.baserow.io/api/database/rows/table/308594/" + value.id,
+                                headers: {
+                                    Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01"
+                                }
+                            })
+                        } else {
+                            axios({
+                                method: "POST",
+                                url: "https://api.baserow.io/api/database/rows/table/308594/?user_field_names=true",
+                                headers: {
+                                    Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01",
+                                    "Content-Type": "application/json"
+                                },
+                                data: {
+                                    "user_name": localStorage.getItem("name"),
+                                    "score": score
+                                }
+                            })
+                        }
+                    })
+                }))
             }
         }
         gamestart()
