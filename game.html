@@ -379,7 +379,7 @@
                     },
                 }).then(function (response) {
                     response.data.results.forEach((value, index) => {
-                        if (score < value.score) {
+                        if (score > value.score) {
                             axios({
                                 method: "DELETE",
                                 url: "https://api.baserow.io/api/database/rows/table/308594/" + value.id,
