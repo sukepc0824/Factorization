@@ -62,7 +62,7 @@
             method: "GET",
             url: "https://api.baserow.io/api/database/rows/table/308594/?user_field_names=true&order_by=-score&size=100",
             headers: {
-                Authorization: "Token ${{ vars.BASEROW_API_TOKEN }}"
+                Authorization: ${{ vars.BASEROW_API_TOKEN }}
             },
         }).then(function (response) {
             response.data.results.forEach((value, index) => {
