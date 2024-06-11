@@ -377,7 +377,7 @@
                     headers: {
                         Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01"
                     },
-                }.then(function (response) {
+                }).then(function (response) {
                     response.data.results.forEach((value, index) => {
                         if (score < value.score) {
                             axios({
@@ -402,7 +402,7 @@
                             })
                         }
                     })
-                }))
+                })
             }
         }
         gamestart()
