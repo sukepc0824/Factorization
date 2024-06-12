@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 
 <head>
     <meta charset="UTF-8">
@@ -55,6 +55,7 @@
             Ranking - top 100
         </h1>
         <table class="ranking-table">
+            <p class="loading">Loading...</p>
         </table>
     </main>
     <script>
@@ -65,6 +66,7 @@
                 Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01"
             },
         }).then(function (response) {
+            document.querySelector(".loading").remove()
             response.data.results.forEach((value, index) => {
                 document.querySelector(".ranking-table").innerHTML += `
                 <tr>
