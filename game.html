@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 
 <head>
     <meta charset="UTF-8">
@@ -189,12 +189,6 @@
                 max-height: calc(100%);
             }
 
-            @keyframes animationZoom {
-                100% {
-                    transform: scale(1.5);
-                }
-            }
-
             h1 {
                 font-size: 54px;
             }
@@ -247,7 +241,7 @@
             <p class="high-score">0</p>
         </div>
         <form method="dialog">
-            <button onclick="gamestart()" class="play" autofocus>▶️ Play Again</button>
+            <button onclick="location.reload()" class="play" autofocus>▶️ Play Again</button>
         </form>
         <button onclick="window.open('./ranking.html')" class="ranking">Open Ranking</button>
     </dialog>
