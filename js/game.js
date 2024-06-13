@@ -15,15 +15,15 @@ function gamestart() {
     difficulty = 3
     score = 0
     if (localStorage.hasOwnProperty("name") && localStorage.getItem("name").length) {
-        fetch('https://api.launchpencil.f5.si/factorization/fetch/?user=' + localStorage.getItem("name"), {
+        fetch('https://api.launchpencil.f5.si/factorization/fetch/?name=' + localStorage.getItem("name"), {
             mode: 'cors'
         })
             .then(response => response.text())
             .then(data => {
-                if (response.data.results.length === 0) {
+                if (data == '') {
                     max_score = 0
                 } else {
-                    max_score = number(data)
+                    max_score = Number(data)
                 }
             })
             .catch(error => {
