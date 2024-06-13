@@ -291,6 +291,8 @@
                 }).then(function (response) {
                     max_score = Math.max(...response.data.results.map(obj => obj.score))
                 })
+            } else {
+                max_score = 0
             }
             document.querySelector(".status-score").innerText = score
             create_buttons()
