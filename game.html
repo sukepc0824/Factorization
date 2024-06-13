@@ -165,7 +165,7 @@
             border: #ddd solid 1px;
             width: 86px;
             padding: 18px;
-            font-size: 34px;
+            font-size: 32px;
             font-family: "DM Mono", sans-serif;
             border-radius: 10px;
             color: #222;
@@ -332,7 +332,7 @@
 
         function generate_product() {
             set_timer()
-            for (let i = 0; i < difficulty ** 2 / 6; i++) {
+            for (let i = 0; i < difficulty ** 1.9 / 6; i++) {
                 prime_number *= prime_list[Math.floor(Math.random() * (prime_list.length - 1) + 1)] * (Math.round(getRandomInt(difficulty) + 1))
             }
             document.querySelector("h1").remove()
