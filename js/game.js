@@ -127,7 +127,7 @@ function submit_userdata() {
 
     if (localStorage.hasOwnProperty("name")) {
         if (max_score < score) {
-            fetch('https://api.launchpencil.f5.si/factorization/update/?user=' + localStorage.getItem("name") + '&score=' + score, {
+            fetch('https://api.launchpencil.f5.si/factorization/update/?name=' + localStorage.getItem("name") + '&score=' + score, {
                 mode: 'cors'
             })
                 .then(response => response.text())
