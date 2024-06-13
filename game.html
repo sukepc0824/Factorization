@@ -321,9 +321,7 @@
             document.querySelector(".score").innerText = score
             document.removeEventListener("keyup", keyup_event)
             document.removeEventListener("keydown", keydown_event)
-            if (prime_number != 1) {
-                clearInterval(countdown)
-            }
+            clearInterval(countdown)
             submit_userdata()
             document.querySelector(".high-score").innerText = max_score
         }
