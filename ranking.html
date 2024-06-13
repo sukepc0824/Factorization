@@ -59,23 +59,17 @@
         </table>
     </main>
     <script>
-        axios({
-            method: "GET",
-            url: "https://api.baserow.io/api/database/rows/table/308594/?user_field_names=true&order_by=-score&size=100",
-            headers: {
-                Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01"
-            },
-        }).then(function (response) {
-            document.querySelector(".loading").remove()
-            response.data.results.forEach((value, index) => {
-                document.querySelector(".ranking-table").innerHTML += `
-                <tr>
-                    <td class="user-rank">${index + 1}</td>
-                    <td class="user-name">${value.user_name}</td>
-                    <td class="user-score">${value.score}</td>
-                </tr>`
-            })
+        fetch('https://api.launchpencil.f5.si/factorization/', {
+            mode: 'cors'
         })
+            .then(response => response.text())
+            .then(data => {
+                document.querySelector(".loading").remove()
+                document.querySelector(".ranking-table").innerHTML += data
+            })
+            .catch(error => {
+                document.querySelector(".ranking-table").innerHTML += 'データ更新に失敗しました。';
+            });
     </script>
 </body>
 

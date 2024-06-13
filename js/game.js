@@ -15,19 +15,20 @@ function gamestart() {
     difficulty = 3
     score = 0
     if (localStorage.hasOwnProperty("name") && localStorage.getItem("name").length) {
-        axios({
-            method: "GET",
-            url: "https://api.baserow.io/api/database/rows/table/308594/?user_field_names=true&search=" + localStorage.getItem("name"),
-            headers: {
-                Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01"
-            },
-        }).then(function (response) {
-            if (response.data.results.length === 0) {
-                max_score = 0
-            } else {
-                max_score = Math.max(...response.data.results.map(obj => obj.score))
-            }
+        fetch('https://api.launchpencil.f5.si/factorization/fetch/?user=' + localStorage.getItem("name"), {
+            mode: 'cors'
         })
+            .then(response => response.text())
+            .then(data => {
+                if (response.data.results.length === 0) {
+                    max_score = 0
+                } else {
+                    max_score = number(data)
+                }
+            })
+            .catch(error => {
+                alert('データ更新に失敗しました。');
+            });
     } else {
         max_score = 0
     }
@@ -126,36 +127,15 @@ function submit_userdata() {
 
     if (localStorage.hasOwnProperty("name")) {
         if (max_score < score) {
-            axios({
-                method: "GET",
-                url: "https://api.baserow.io/api/database/rows/table/308594/?search=" + localStorage.getItem("name"),
-                headers: {
-                    Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01"
-                }
-            }).then(function (response) {
-                response.data.results.forEach((value, index) => {
-                    axios({
-                        method: "DELETE",
-                        url: "https://api.baserow.io/api/database/rows/table/308594/" + value.id + "/",
-                        headers: {
-                            Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01"
-                        }
-                    })
-                })
-            }).then(function (response) {
-                axios({
-                    method: "POST",
-                    url: "https://api.baserow.io/api/database/rows/table/308594/?user_field_names=true",
-                    headers: {
-                        Authorization: "Token N7q1jTTaOZ0cO6EpJ4cjf0DDJMJdQb01",
-                        "Content-Type": "application/json"
-                    },
-                    data: {
-                        "user_name": localStorage.getItem("name"),
-                        "score": score
-                    }
-                })
+            fetch('https://api.launchpencil.f5.si/factorization/update/?user=' + localStorage.getItem("name") + '&score=' + score, {
+                mode: 'cors'
             })
+                .then(response => response.text())
+                .then(data => {
+                })
+                .catch(error => {
+                    alert('データ更新に失敗しました。');
+                });
         }
     }
 }
